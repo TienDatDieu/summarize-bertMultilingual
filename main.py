@@ -182,9 +182,8 @@ def train(transformer):
         train_loss.reset_states()
         for (batch, (inp, tar)) in enumerate(dataset):
             train_step(inp, tar, transformer)
-            if batch > 0 and (batch) % 100 == 0:
+            if (batch > 0 and batch % 10000 == 0):
                 ckpt_save_path = ckpt_manager.save()
-                print ('Saving checkpoint for epoch {} at {}'.format(epoch, ckpt_save_path))
                 logger.info('Saving checkpoint for epoch {} at {}'.format(epoch, ckpt_save_path))
 
         
@@ -197,6 +196,8 @@ if __name__ == "__main__":
     list_topic_count = joblib.load('list_topic_count.jl')
     checkpoint_path = "checkpoints"
     learning_rate = CustomSchedule(d_model)
+    encoder_vocab_size = tokenizer.vocab_size
+    decoder_vocab_size = tokenizer.vocab_size
     optimizer = tf.keras.optimizers.Adam(learning_rate, beta_1=0.9, beta_2=0.98, epsilon=1e-9)
     transformer = TransformerModel(
         num_layers, 

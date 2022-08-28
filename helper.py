@@ -92,15 +92,15 @@ def loss_function(real, pred):
     return final_loss
 
 def evaluate(input_document, tokenizer, encoder_maxlen, decoder_maxlen, transformer):
-    input_document = '[CLS]' + input_document + '[SEP]'
+    input_document = tokenizer.special_tokens_map['cls_token'] + input_document + tokenizer.special_tokens_map['sep_token']
     input_document = [tokenizer(d,return_tensors='tf').data['input_ids'].numpy().tolist()[0] for d in input_document]
     input_document = tf.keras.preprocessing.sequence.pad_sequences(input_document, maxlen=encoder_maxlen, padding='post', truncating='post')
     input_document = tf.cast(input_document, dtype=tf.int32)
     encoder_input = tf.expand_dims(input_document[0], 0)
-    decoder_input = tokenizer("<go>",return_tensors='tf').data['input_ids'].numpy().tolist()[0]
+    decoder_input = tokenizer(tokenizer.special_tokens_map['cls_token'],return_tensors='tf').data['input_ids'].numpy().tolist()[0]
     output = tf.expand_dims(decoder_input, 0)
     
-    get_final_value = tf.zeros((1,1,64000))
+    get_final_value = tf.zeros((1,1,tokenizer.vocab_size))
     for i in range(decoder_maxlen):
         enc_padding_mask, combined_mask, dec_padding_mask = create_masks(encoder_input, output)
         
