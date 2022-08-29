@@ -184,7 +184,7 @@ def train(transformer):
             train_step(inp, tar, transformer)
             if (batch > 0 and batch % 1000 == 0):
                 print('Batch {} Loss {:.4f}'.format(batch, train_loss.result()))
-        if (epoch % 5 == 0):
+        if (epoch > 0 and epoch % 100 == 0):
                 ckpt_save_path = ckpt_manager.save()
                 logger.info('Saving checkpoint for epoch {} at {}'.format(epoch, ckpt_save_path))
     
