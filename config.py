@@ -4,7 +4,7 @@ num_layers = 4
 d_model = 512
 dff = 512
 num_heads = 8
-EPOCHS = 1000
+EPOCHS = 150
 
 
 encoder_maxlen = 512
