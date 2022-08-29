@@ -182,12 +182,13 @@ def train(transformer):
         train_loss.reset_states()
         for (batch, (inp, tar)) in enumerate(dataset):
             train_step(inp, tar, transformer)
-            if (batch > 0 and batch % 10000 == 0):
+            if (batch > 0 and batch % 1000 == 0):
+                print('Batch {} Loss {:.4f}'.format(batch, train_loss.result()))
+        if (epoch % 5 == 0):
                 ckpt_save_path = ckpt_manager.save()
                 logger.info('Saving checkpoint for epoch {} at {}'.format(epoch, ckpt_save_path))
-
-        
-        logger.info('Epoch {} Loss {:.4f}'.format(epoch + 1, train_loss.result()))
+    
+        logger.info('Epoch {} Loss {:.4f}'.format(epoch, train_loss.result()))
         logger.info('Time taken for 1 epoch: {} secs\n'.format(time.time() - start))
     return val_input, val_output
 
