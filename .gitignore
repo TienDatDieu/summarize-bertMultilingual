@@ -1,0 +1,5 @@
+/checkpoints
+target_strings.jl
+train_pharagraph.jl
+/__pycache__
+log.txt
