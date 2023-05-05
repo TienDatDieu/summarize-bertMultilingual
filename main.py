@@ -193,7 +193,7 @@ def train(transformer):
     return val_input, val_output
 
 if __name__ == "__main__":
-    word2Topic = joblib.load('word2Topic.jl')
+    word2Topic = joblib.load('word2Topic_v2.jl')
     list_topic_count = joblib.load('list_topic_count.jl')
     checkpoint_path = "checkpoints"
     learning_rate = CustomSchedule(d_model)
