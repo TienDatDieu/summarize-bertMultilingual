@@ -3,16 +3,17 @@ from decoder import Decoder
 import tensorflow as tf
 from log_manager import logger
 import numpy as np
+from bertLayer import BertLayer
 
 
 #@title
 
 class TransformerModel(tf.keras.Model):
-    def __init__(self, num_layers, d_model, num_heads, dff, input_vocab_size, target_vocab_size, pe_input, pe_target, word2Topic, list_topic_count, rate=0.1):
+    def __init__(self, num_layers, d_model, num_heads, dff, input_vocab_size, target_vocab_size, pe_input, pe_target, word2Topic, list_topic_count, bert, rate=0.1):
         super(TransformerModel, self).__init__()
 
-        self.encoder = Encoder(num_layers, d_model, num_heads, dff, input_vocab_size, pe_input, rate)
-
+        # self.encoder = Encoder(num_layers, d_model, num_heads, dff, input_vocab_size, pe_input, rate)
+        self.encoder = BertLayer(bert)
         self.decoder = Decoder(num_layers, d_model, num_heads, dff, target_vocab_size, pe_target, rate)
 
         self.final_layer = tf.keras.layers.Dense(target_vocab_size)
@@ -21,7 +22,8 @@ class TransformerModel(tf.keras.Model):
         self.list_topic_count = list_topic_count
     
     def call(self, inp, tar, training, enc_padding_mask, look_ahead_mask, dec_padding_mask, alpha = 0):
-        enc_output = self.encoder(inp, training, enc_padding_mask)
+        # enc_output = self.encoder(inp, training, enc_padding_mask)
+        enc_output = self.encoder(inp)
         dec_output, attention_weights = self.decoder(tar, enc_output, training, look_ahead_mask, dec_padding_mask)
         
         final_output = self.final_layer(dec_output)

@@ -155,7 +155,8 @@ def train_step(inp, tar, transformer):
         loss = loss_function(tar_real, predictions)
 
     gradients = tape.gradient(loss, transformer.trainable_variables)    
-    optimizer.apply_gradients(zip(gradients, transformer.trainable_variables))
+    # optimizer.apply_gradients(zip(gradients, transformer.trainable_variables))
+    optimizer.apply_gradients((grad, var)  for (grad, var) in zip(gradients, transformer.trainable_variables) if grad is not None)
 
     train_loss(loss)
     del inp 
@@ -210,7 +211,8 @@ if __name__ == "__main__":
         pe_input=encoder_vocab_size, 
         pe_target=decoder_vocab_size,
         word2Topic=word2Topic,
-        list_topic_count=list_topic_count
+        list_topic_count=list_topic_count,
+        bert = model
         ) 
     ckpt = tf.train.Checkpoint(transformer=transformer, optimizer=optimizer)
 
